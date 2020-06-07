@@ -16,13 +16,13 @@ const Clients = () => {
 
     useEffect(() => {
         queryApi();
-    }, [])
+    }, [clients])
 
     return (
         <Fragment>
             <h2>Clients</h2>
-            <Link to={"/clients/new"} class="btn btn-verde nvo-cliente">
-                 <i class="fas fa-plus-circle"></i>
+            <Link to={"/clients/new"} className="btn btn-verde nvo-cliente">
+                 <i className="fas fa-plus-circle"></i>
                 New Client
             </Link>
             <ul className='listado-clientes'>

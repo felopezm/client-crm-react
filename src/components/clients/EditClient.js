@@ -1,11 +1,14 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import { withRouter} from 'react-router-dom';
 import clientAxios from '../../config/axios';
 
-const NewClient = ({history}) => {
+const EditClient = (props) => {
+
+    const { id } = props.match.params;
+
     // client = state
-    const [client, saveClient] = useState({
+    const [client, dataClient] = useState({
         first_name: '',
         last_name: '',
         company: '',
@@ -13,9 +16,21 @@ const NewClient = ({history}) => {
         telephone: ''
     });
 
+    // query api
+    const queryApi = async () =>{
+        const queryClient = await clientAxios.get(`/clients/${id}`);
+
+        dataClient(queryClient.data);
+        
+    }
+    // useEffect load component
+    useEffect(() => {
+        queryApi();
+    }, [])
+
     const updateState = e => {
         // save data client nnChange input
-        saveClient({
+        dataClient({
             // get copy state
             ...client,
             [e.target.name]: e.target.value
@@ -30,36 +45,36 @@ const NewClient = ({history}) => {
         return validate;
     }
 
-    const addClient = e => {
+    const updateClient = e =>{
         e.preventDefault();
 
-        clientAxios.post('/clients', client)
+        clientAxios.put(`/clients/${id}`,client)
             .then(res => {
                 if (res.data.code) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: 'Something went wrong!, validate email client',
+                        text: 'Something went wrong!',
                     });
                 } else {
                     Swal.fire(
                         'Good job!',
-                        res.data.message,
+                        'Updated Client !',
                         'success'
                     );
                     
                     // redirect
-                    history.push('/');
+                    props.history.push('/');
                 }
-            });
+            })
     }
 
     return (
         <Fragment>
-            <h2>New Client</h2>
+            <h2>Edit Client</h2>
 
             <form
-                onSubmit={addClient}
+                onSubmit={updateClient}
             >
                 <legend>Fill all the fields</legend>
 
@@ -69,6 +84,7 @@ const NewClient = ({history}) => {
                         placeholder="First Name Client"
                         name="first_name"
                         onChange={updateState}
+                        value={client.first_name}
                     />
                 </div>
 
@@ -78,6 +94,7 @@ const NewClient = ({history}) => {
                         placeholder="Last Name Client"
                         name="last_name"
                         onChange={updateState}
+                        value={client.last_name}
                     />
                 </div>
 
@@ -87,6 +104,7 @@ const NewClient = ({history}) => {
                         placeholder="Company Client"
                         name="company"
                         onChange={updateState}
+                        value={client.company}
                     />
                 </div>
 
@@ -96,6 +114,7 @@ const NewClient = ({history}) => {
                         placeholder="Email Client"
                         name="email"
                         onChange={updateState}
+                        value={client.email}
                     />
                 </div>
 
@@ -105,13 +124,14 @@ const NewClient = ({history}) => {
                         placeholder="Telephone Client"
                         name="telephone"
                         onChange={updateState}
+                        value={client.telephone}
                     />
                 </div>
 
                 <div className="enviar">
                     <input type="submit"
                         className="btn btn-azul"
-                        value="Add Client"
+                        value="Save Changes"
                         disabled={validateClient()}
                     />
                 </div>
@@ -122,4 +142,4 @@ const NewClient = ({history}) => {
 }
 
 // withRouter = redirect
-export default withRouter(NewClient);
+export default withRouter(EditClient);
