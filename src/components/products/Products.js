@@ -1,6 +1,7 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment} from 'react';
 import { Link } from 'react-router-dom';
 import clientAxios from '../../config/axios';
+import Spinner from '../layout/Spinner';
 
 import Product from './Product';
 
@@ -9,14 +10,16 @@ const Products = () => {
     // products = state
     const [products, saveProducts] = useState([]);
 
-    const queryApi = async () => {
-        const queryProducts = await clientAxios.get('/products');
-        saveProducts(queryProducts.data);
-    }
-
     useEffect(() => {
+        const queryApi = async () => {
+            const queryProducts = await clientAxios.get('/products');
+            saveProducts(queryProducts.data);
+        }
+
         queryApi();
-    }, [products]);
+    }, []);
+
+    if (!products.length) return <Spinner />
 
     return (
         <Fragment>

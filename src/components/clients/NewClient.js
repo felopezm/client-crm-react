@@ -4,7 +4,7 @@ import { withRouter} from 'react-router-dom';
 import clientAxios from '../../config/axios';
 
 const NewClient = ({history}) => {
-    // client = state
+    // client = state, saveClient = serstate
     const [client, saveClient] = useState({
         first_name: '',
         last_name: '',

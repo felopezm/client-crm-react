@@ -5,8 +5,6 @@ import clientAxios from '../../config/axios';
 
 const Product = ({ product }) => {
 
-    const { _id, name, price, image } = product;
-
     const deleteProduct = id => {
         Swal.fire({
             title: 'Are you sure?',
@@ -38,6 +36,8 @@ const Product = ({ product }) => {
         })
     }
 
+    const { _id, name, price, image } = product;
+    
     return (
         <li className="producto">
             <div className="info-producto">
@@ -60,7 +60,7 @@ const Product = ({ product }) => {
                     onClick={() => deleteProduct(_id)}
                 >
                     <i className="fas fa-times"></i>
-                    Delete Client
+                    Delete Product
                 </button>
             </div>
         </li>

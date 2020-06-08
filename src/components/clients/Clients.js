@@ -2,6 +2,7 @@ import React, { useEffect, useState, Fragment } from 'react';
 import clientAxios from '../../config/axios';
 import Client from './Client';
 import { Link } from 'react-router-dom';
+import Spinner from '../layout/Spinner';
 
 const Clients = () => {
 
@@ -16,7 +17,9 @@ const Clients = () => {
 
     useEffect(() => {
         queryApi();
-    }, [clients])
+    }, []);
+
+    if(!clients.length) return <Spinner />
 
     return (
         <Fragment>

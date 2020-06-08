@@ -26,7 +26,7 @@ const EditClient = (props) => {
     // useEffect load component
     useEffect(() => {
         queryApi();
-    }, [])
+    }, []);
 
     const updateState = e => {
         // save data client nnChange input
