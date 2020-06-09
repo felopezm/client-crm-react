@@ -1,8 +1,10 @@
 import React from 'react';
 
-const FormQuantityProduct = ({product}) => {
+const FormQuantityProduct = (props) => {
 
-    const {name,price,quantity} = product;
+    const {product,sumProducts,subtractProducts,deleteProductOrder,index} = props;
+
+    const {_id,name,price,quantity} = product;
 
     return (
         <li>
@@ -12,11 +14,21 @@ const FormQuantityProduct = ({product}) => {
             </div>
             <div className="acciones">
                 <div className="contenedor-cantidad">
-                    <i className="fas fa-minus"></i>
+                    <i 
+                        className="fas fa-minus"
+                        onClick={() => subtractProducts(index)}
+                    ></i>
                     <p>{quantity}</p>
-                    <i className="fas fa-plus"></i>
+                    <i 
+                        className="fas fa-plus"
+                        onClick={() => sumProducts(index)}
+                    ></i>
                 </div>
-                <button type="button" className="btn btn-rojo">
+                <button 
+                    type="button" 
+                    className="btn btn-rojo"
+                    onClick={() => deleteProductOrder(_id)}  
+                >
                     <i className="fas fa-minus-circle"></i>
                         Delete Product
                 </button>
