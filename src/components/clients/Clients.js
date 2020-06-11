@@ -10,7 +10,11 @@ const Clients = () => {
     const [clients, saveClients] = useState([]);
 
     const queryApi = async () => {
-        const clientsData = await clientAxios.get('/clients');
+        const clientsData = await clientAxios.get('/clients', {
+            headers:{
+                Autorization: `Bearer hola mundo`
+            }
+        });
        
         saveClients(clientsData.data);
     }

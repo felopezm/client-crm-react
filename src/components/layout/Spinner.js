@@ -3,9 +3,9 @@ import './Spinner.css';
 
 const Spinner = () => {
     return (
-        <div className="cube1">
-            <div className="spinner"></div>
-            <div className="cube2"></div>
+        <div className="spinner">
+            <div className="dot1"></div>
+            <div className="dot2"></div>
         </div>
     );
 }
