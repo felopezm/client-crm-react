@@ -1,12 +1,14 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, useContext, Fragment } from 'react';
 import Swal from 'sweetalert2';
-import clientAxios from '../../config/axios';
 import { withRouter } from 'react-router-dom';
 
+import clientAxios from '../../config/axios';
 import FormSearchProduct from './FormSearchProduct';
 import FormQuantityProduct from './FormQuantityProduct';
+import { CRMContext } from '../../context/CRMContex';
 
 const NewOrder = (props) => {
+    const [auth, saveAuth] = useContext(CRMContext);
 
     const { id } = props.match.params;
     const [client, dataClient] = useState({});
@@ -26,6 +28,8 @@ const NewOrder = (props) => {
 
         updateTotal();
     }, [products]);
+
+    if(!auth.auth) return null;
 
     const searchProduct = async e => {
         e.preventDefault();

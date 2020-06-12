@@ -1,39 +1,57 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState, Fragment, useContext } from 'react';
+import { Link, withRouter } from 'react-router-dom';
+
 import clientAxios from '../../config/axios';
 import Client from './Client';
-import { Link } from 'react-router-dom';
 import Spinner from '../layout/Spinner';
+import { CRMContext } from '../../context/CRMContex';
 
-const Clients = () => {
+const Clients = (props) => {
+    // context
+    const [auth, saveAuth] = useContext(CRMContext);
 
     // job state 
     const [clients, saveClients] = useState([]);
 
     const queryApi = async () => {
-        const clientsData = await clientAxios.get('/clients', {
-            headers:{
-                Autorization: `Bearer hola mundo`
+        try {
+            const clientsData = await clientAxios.get('/clients', {
+                headers: {
+                    Authorization: `Bearer ${auth.token}`
+                }
+            });
+    
+            saveClients(clientsData.data);
+        } catch (error) {
+            // error token 
+            if (error.response.status === 500) {
+                props.history.push('/login');
             }
-        });
-       
-        saveClients(clientsData.data);
+        }
     }
 
     useEffect(() => {
-        queryApi();
+        if (auth.token !== '') {
+            queryApi();
+        } else {
+            props.history.push('/login');
+        }
     }, []);
 
-    if(!clients.length) return <Spinner />
+    if(!auth.auth)
+        props.history.push('/login');
+
+    if (!clients.length) return <Spinner />
 
     return (
         <Fragment>
             <h2>Clients</h2>
             <Link to={"/clients/new"} className="btn btn-verde nvo-cliente">
-                 <i className="fas fa-plus-circle"></i>
+                <i className="fas fa-plus-circle"></i>
                 New Client
             </Link>
             <ul className='listado-clientes'>
-                {clients.map(client =>(
+                {clients.map(client => (
                     <Client
                         key={client._id}
                         client={client}
@@ -41,8 +59,8 @@ const Clients = () => {
                 ))}
             </ul>
         </Fragment>
-        
+
     );
 }
 
-export default Clients;
+export default withRouter(Clients);

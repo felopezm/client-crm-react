@@ -1,9 +1,13 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import Swal from 'sweetalert2';
 import { withRouter} from 'react-router-dom';
 import clientAxios from '../../config/axios';
+import { CRMContext } from '../../context/CRMContex';
 
 const Login = (props) => {
+
+    // context
+    const [auth, saveAuth] = useContext(CRMContext);
 
     const [ credentials, saveCredential] = useState({});
 
@@ -15,6 +19,11 @@ const Login = (props) => {
 
             const { token } = response.data;
             localStorage.setItem('token', token);
+
+            saveAuth({
+                token,
+                auth: true
+            });
 
             Swal.fire({
                 icon: 'success',

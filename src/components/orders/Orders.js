@@ -1,20 +1,39 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState, useContext, Fragment } from 'react';
+import { withRouter } from 'react-router-dom';
+
 import clientAxios from '../../config/axios';
-
 import DetallOrder from './DetallOrder';
+import { CRMContext } from '../../context/CRMContex';
 
-const Orders = () => {
+const Orders = (props) => {
+    // context
+    const [auth, saveAuth] = useContext(CRMContext);
 
     const [orders, saveOrders] = useState([]);
 
-    useEffect(() => {
-        const queryApiOrders = async () => {
-            const resultOrders = await clientAxios.get('/orders');
+    const queryApiOrders = async () => {
+        try {
+            const resultOrders = await clientAxios.get('/orders', {
+                headers: {
+                    Authorization: `Bearer ${auth.token}`
+                }
+            });
 
             saveOrders(resultOrders.data);
+        } catch (error) {
+            // error token 
+            if (error.response.status === 500) {
+                props.history.push('/login');
+            }
         }
+    }
 
-        queryApiOrders();
+    useEffect(() => {
+        if (auth.token !== '') {
+            queryApiOrders();
+        } else {
+            props.history.push('/login');
+        }
     }, [])
 
     return (
@@ -23,15 +42,15 @@ const Orders = () => {
 
             <ul className="listado-pedidos">
                 {orders.map(order => (
-                    <DetallOrder 
+                    <DetallOrder
                         key={order._id}
                         order={order}
                     />
                 ))}
-           </ul>
+            </ul>
 
         </Fragment>
     );
 }
 
-export default Orders;
+export default withRouter(Orders);

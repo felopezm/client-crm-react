@@ -1,9 +1,14 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useContext } from 'react';
 import Swal from 'sweetalert2';
 import { withRouter} from 'react-router-dom';
 import clientAxios from '../../config/axios';
 
+import { CRMContext } from '../../context/CRMContex';
+
 const NewClient = ({history}) => {
+    // context
+    const [auth, saveAuth] = useContext(CRMContext);
+
     // client = state, saveClient = serstate
     const [client, saveClient] = useState({
         first_name: '',
@@ -53,6 +58,11 @@ const NewClient = ({history}) => {
                 }
             });
     }
+
+    // validate user autenticated
+    if(!auth.auth && (localStorage.getItem('token') === auth.token)){
+        history.push('/login');
+    };
 
     return (
         <Fragment>
